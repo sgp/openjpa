@@ -258,6 +258,7 @@ public class DBDictionary
     public boolean supportsSimpleCaseExpression = true;
     public boolean supportsGeneralCaseExpression = true;
     public boolean useWildCardForCount = false;
+    public boolean supportsSavepoints = false;
     
     /**
      * Some Databases append whitespace after the schema name 
@@ -3483,11 +3484,11 @@ public class DBDictionary
         if (!useNativeSequenceCache && logNativeSequenceCacheWarning){
             log.warn(_loc.get("sequence-cache-warning"));
             logNativeSequenceCacheWarning=false;
-        }        
+        }
 
         StringBuilder buf = new StringBuilder();
         buf.append(create ? "CREATE" : "ALTER").append(" SEQUENCE ");
-        
+
         //Strip off the schema and verify the sequence name is within the legal length, NOT
         //the schema name + sequence name.
         checkNameLength(toDBName(seq.getFullIdentifier().getUnqualifiedName()), 
@@ -5613,5 +5614,21 @@ public class DBDictionary
     
     public String getIdentityColumnName() {
         return null;       
+    }
+
+    public String getCreateSavepointSQL(String savepointName)
+    {
+        if (supportsSavepoints) {
+            return String.format("SAVEPOINT %s", savepointName);
+        }
+        return null;
+    }
+
+    public String getRollbackToSQL(String savepointName)
+    {
+        if (supportsSavepoints) {
+            return String.format("ROLLBACK TO %s", savepointName);
+        }
+        return null;
     }
 }

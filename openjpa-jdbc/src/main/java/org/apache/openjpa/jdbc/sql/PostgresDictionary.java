@@ -192,6 +192,8 @@ public class PostgresDictionary
         supportsQueryTimeout = false;
         supportsLockingWithOuterJoin = false;
 
+        supportsSavepoints = true;
+
         reservedWordSet.addAll(Arrays.asList(new String[]{
             "ABORT", "ACL", "AGGREGATE", "APPEND", "ARCHIVE", "ARCH_STORE",
             "BACKWARD", "BINARY", "CHANGE", "CLUSTER", "COPY", "DATABASE",
@@ -199,8 +201,8 @@ public class PostgresDictionary
             "FORWARD", "HEAVY", "INDEX", "INHERITS", "ISNULL", "LIGHT",
             "LISTEN", "LOAD", "MERGE", "NOTHING", "NOTIFY", "NOTNULL",
             "OID", "OIDS", "PURGE", "RECIPE", "RENAME", "REPLACE",
-            "RETRIEVE", "RETURNS", "RULE", "SETOF", "STDIN", "STDOUT",
-            "STORE", "VACUUM", "VERBOSE", "VERSION",
+            "RETRIEVE", "RETURNS", "RULE", "SETOF", "SAVEPOINT", "STDIN",
+            "STDOUT", "STORE", "VACUUM", "VERBOSE", "VERSION",
         }));
 
         // reservedWordSet subset that CANNOT be used as valid column names
