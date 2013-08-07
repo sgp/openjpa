@@ -255,8 +255,8 @@ public class OpenJPAConfigurationImpl
             "partitioned", PartitionedDataCache.class.getName(),
         };
         dataCachePlugin.setAliases(aliases);
-        dataCachePlugin.setDefault(aliases[0]);
-        dataCachePlugin.setString(aliases[0]);
+        dataCachePlugin.setDefault(aliases[2]);
+        dataCachePlugin.setString(aliases[2]);
 
         dataCacheTimeout = addInt("DataCacheTimeout");
         dataCacheTimeout.setDefault("-1");
