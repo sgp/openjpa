@@ -221,22 +221,20 @@ public class NativeJDBCSeq
                 DBDictionary dict = _conf.getDBDictionaryInstance();
                 // If this fails, we will warn the user at most one time and set _allocated and _increment to 1 so
                 // as to not potentially insert records ahead of what the database thinks is the next sequence value.
-                if (dict.supportsSavepoints)
-                {
-                    updateSql(conn,
-                            dict.getCreateSavepointSQL("alter_seq_" + _seq.getIdentifier().getUnqualifiedName()));
+                if (!conn.getAutoCommit() && dict.supportsSavepoints) {
+                    updateSql(conn, dict.getCreateSavepointSQL("alter_seq_" +
+                            _seq.getIdentifier().getUnqualifiedName()));
                 }
                 if (updateSql(conn, dict.getAlterSequenceSQL(_seq)) == -1) {
+                    if (!conn.getAutoCommit() && dict.supportsSavepoints) {
+                        updateSql(conn, dict.getRollbackToSQL("alter_seq_" +
+                                _seq.getIdentifier().getUnqualifiedName()));
+                    }
                     if (!alreadyLoggedAlterSeqFailure) {
                         Log log = _conf.getLog(OpenJPAConfiguration.LOG_RUNTIME);
                         if (log.isWarnEnabled()) {
                             log.warn(_loc.get("fallback-no-seq-cache", _seqName));
                         }
-                    }
-                    if (dict.supportsSavepoints)
-                    {
-                        updateSql(conn,
-                                dict.getRollbackToSQL("alter_seq_" + _seq.getIdentifier().getUnqualifiedName()));
                     }
                     alreadyLoggedAlterSeqFailure = true;
                     _allocate = 1;
